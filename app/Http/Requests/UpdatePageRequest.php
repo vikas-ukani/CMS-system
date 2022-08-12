@@ -27,7 +27,7 @@ class UpdatePageRequest extends FormRequest
             'title' => [
                 'required',
                 'min:3',
-                'max:50',
+                'max:200',
                 "unique:pages,title," . $this->id
             ],
             'slug' => 'required',

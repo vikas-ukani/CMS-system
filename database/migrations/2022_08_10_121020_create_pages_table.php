@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 50)->comment('Name of the page');
-            $table->string('slug', 50)->comment('Route slug from name');
+            $table->string('title', 200)->comment('Name of the page');
+            $table->string('slug', 200)->comment('Route slug from name');
             $table->text('content')->comment('Page body content');
             $table->bigInteger('parent_id')->nullable()->comment('Tree level relation, Parent will be take null value.');
             $table->timestamps();

@@ -58,6 +58,6 @@ class Page extends Model
      */
     public function parent()
     {
-        return $this->hasOne(__CLASS__, 'id', 'parent_id');
+        return $this->hasOne(__CLASS__, 'id', 'parent_id')->with('parent');
     }
 }

@@ -85,6 +85,14 @@ class PageController extends Controller
      */
     public function destroy(Page $page)
     {
+        /**
+         * Update child pages parent id to null
+         */
+        $childPage = Page::where('parent_id', $page->id)->get();
+        $ids = array_values(collect($childPage)->pluck('id')->all());
+        // Page::whereIn('id', $ids)->update('parent_id', null);
+        \DB::table('pages')->whereIn('id', $ids)->update(['parent_id' => null]);
+
         $page->delete();
         return response()->json([
             'data' => null,
