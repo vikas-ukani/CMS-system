@@ -1,12 +1,11 @@
 <template>
   <div class="my-5">
     <div class="d-flex mb-3 mt-5 justify-content-between">
-      <h3 class="">Create Page</h3>
+      <h3 class="">Update Page - {{ this.page.title }}</h3>
       <router-link :to="{ name: 'pages' }" class="btn btn-warning">
         <span class="text-decoration-underline "> Back to list</span>
       </router-link>
     </div>
-
     <form @submit.prevent="onSubmit">
       <div class="errors" v-if="errors">
         <ul>
@@ -35,7 +34,7 @@
       <div class="mb-3 mt-4">
         <label for="parentPage" class="form-label">Parent Page</label>
         <v-select v-model="page.parent_id" :reduce="(option) => option.id" :options="parentPages"
-          placeholder="Select parent page." />
+          placeholder="Select parent page." :value="page.parent_id" />
       </div>
 
       <div class="form-group" :class="{ error: v$.page.content.$errors.length }">
@@ -50,21 +49,25 @@
       </div>
 
       <div class="buttons-w mt-5 d-flex justify-content-between">
-        <router-link :to="{ name: 'pages' }" class="btn btn-warning">Cancel</router-link>
-        <button class="btn btn-success ml-3">Create Page</button>
+        <router-link :to="{ name: 'pages' }" class="btn btn-warning">
+          Cancel
+        </router-link>
+        <button :disabled="v$.page.$invalid" class="btn btn-success ml-3">Save Page</button>
       </div>
     </form>
   </div>
 </template>
-
 <script>
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import useVuelidate from '@vuelidate/core'
 import { required, minLength, helpers } from '@vuelidate/validators'
 import { API_URL } from '../../utils'
+import axios from 'axios';
 import vSelect from 'vue-select';
 
+/** Search select dropdown field css */
 export default {
+  name: "Edit",
   components: {
     vSelect
   },
@@ -73,24 +76,42 @@ export default {
     return { v$: useVuelidate() }
   },
 
-  created() {
+  created: function () {
+    let { id } = this.$route.params
+    axios.get(`${API_URL}/pages/${id}`)
+      .then(res => {
+        res = res.data
+        if (res.success) {
+          this.mainSlug = id
+          this.page = res.data
+          console.log('this.page::', this.page);
+        } else {
+          console.log('res.message::', res.message);
+          if (res?.message) alert("Error: " + res.message)
+        }
+      })
+      .catch(e => {
+        alert("Error Found: Open console to see logs")
+        console.log('ERROR::', e.response.error.message);
+      })
+
     /** Get parent pages */
     axios.get(`${API_URL}/pages`)
       .then(res => {
         res = res.data
-        if (res.success) this.parentPages = res.data.map(list => ({ id: list.id, label: list.title }))
+        if (res.success) this.parentPages = res.data.map(list => ({ id: list.id, label: list.title })).filter(list => list.id !== this.page.id)
         else this.parentPages = []
       })
   },
 
   data() {
     return {
+      mainSlug: "",
       editor: ClassicEditor,
-      editorConfig: {
-        // The configuration of the editor.
-      },
+      editorConfig: {}, // Content editor config
       parentPages: [],
       page: {
+        id: null,
         title: '',
         slug: '',
         content: '<p></p>',
@@ -118,7 +139,12 @@ export default {
   methods: {
     onSubmit(e) {
       e.preventDefault();
-      axios.post(`${API_URL}/pages`, this.page)
+      if (!this.mainSlug || this.mainSlug == "") {
+        alert("Page Details not found");
+        return false;
+      }
+      let { created_at, updated_at, ...rest } = this.page
+      axios.put(`${API_URL}/pages/${this.mainSlug}`, rest)
         .then(res => {
           res = res.data
           if (res.success) {
@@ -130,7 +156,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log('e.response::', e.response.data);
+          console.log('e.response::', e.response);
           let errors = e.response?.data?.errors
           if (errors) {
             this.errors = errors
@@ -141,7 +167,6 @@ export default {
       // Convert title to slug field
       this.page.slug = $event.target.value.trim().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
     }
-
   },
 } 
 </script>

@@ -6,6 +6,9 @@ import router from './router.js'
 
 import CKEditor from '@ckeditor/ckeditor5-vue';
 
+// /** Search select dropdown component and css */
+import "vue-select/dist/vue-select.css";
+
 /**
  * Creating Vue App Instance
  */

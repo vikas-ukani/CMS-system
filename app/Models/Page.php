@@ -15,14 +15,49 @@ class Page extends Model
         'content',
         'parent_id',
     ];
+   
+    /** BUG: Throwing error while using in dropdown value using id */
+    // protected $hidden = [
+    //     "id",
+    // ];
 
     /**
-     * Get all child pages 
+     * Binding Route model with slug instead of id default field
      *
      * @return void
      */
-    public function childrens()
+    public function getRouteKeyName()
     {
-        $this->hasMany(Page::class, 'id', 'parent_id');
+        return 'slug';
+    }
+
+    /**
+     * Casting dates to readable form
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d H:i',
+        'updated_at' => 'datetime:d-m-Y H:i',
+    ];
+
+    /**
+     * Get all N level of child for pages 
+     *
+     * @return void
+     */
+    public function children()
+    {
+        return $this->hasMany(Page::class, 'parent_id', 'id')->with('children');
+    }
+
+    /**
+     * Get Parent Relation with page.
+     *
+     * @return void
+     */
+    public function parent()
+    {
+        return $this->hasOne(__CLASS__, 'id', 'parent_id');
     }
 }
