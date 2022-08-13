@@ -36,12 +36,6 @@ git clone https://github.com/vikas-ukani/CMS-system.git
 cp .env.example .env
 ```
 
-- Configure local database connection.
-###  Generate key if it's required, Run the command 
-```
-php artisan generate:key
-```
-
 ### Install pacakges.
 - Install php laravel pacakges
 ```
@@ -52,12 +46,25 @@ composer install
 npm install 
 ```
 
+- Configure local database connection.
+###  Generate key if it's required, Run the command 
+```
+php artisan key:generate
+```
+
 ### Database setup
 - Find the exported database backup on database directory and import on local system.
 - Path `database/cms-system.sql`
 
 - OR run the migrations, for fresh database setup.
 `php artisan migrate`
+
+### Seed the dummy data.
+- After done setup with, Run the below command to insert dummy data to database
+```
+php artisan db:seed
+```
+
 
 ### Run the PHP server
 ```
