@@ -13,11 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/**
+ * Route for Loading Vue App.
+ */
 Route::get('/', function () {
     return view('app');
 });
 
-
+/** Handlling Vue Routes */
 Route::get('{any}', function () {
     return view('app');
 })->where('any', '.*');

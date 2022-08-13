@@ -49,6 +49,7 @@
 
 <script>
 import { API_URL } from '../../utils'
+import axios from 'axios';
 
 export default {
     name: "AllPages",
@@ -65,10 +66,7 @@ export default {
                 res = res.data
                 if (res.success) {
                     this.pages = res.data.map(list => {
-                        return {
-                            ...list,
-                            route: `/pages/${this.recursiveGetRoute(list)}`
-                        }
+                        return { ...list, route: `/pages/${this.recursiveGetRoute(list)}` }
                     })
                 }
             })
@@ -77,13 +75,10 @@ export default {
                 alert("Error found: See console logs");
                 console.log('e.response.data::', e.response?.data);
             })
-        // this.getPages()
     },
     methods: {
         deletePage(slug) {
-            console.log('id::', slug);
-            let ok = confirm("Are you sure you want to delete this page?")
-            if (ok) {
+            if (confirm("Are you sure you want to delete this page?")) {
                 axios.delete(`${API_URL}/pages/${slug}`)
                     .then(res => {
                         res = res.data
@@ -100,9 +95,11 @@ export default {
                         console.log('res.message::', err);
                     })
             }
-
         },
 
+        /**
+         * Getnerate Route, Ex. page1/page2/page3/page4/page5/.....
+         */
         recursiveGetRoute(obj) {
             let path = obj.slug
             if (obj.parent) path = this.recursiveGetRoute(obj.parent) + "/" + path
@@ -110,7 +107,6 @@ export default {
         }
     }
 };
-import axios from 'axios';
 </script>
 
 <style>

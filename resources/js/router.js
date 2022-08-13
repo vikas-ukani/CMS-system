@@ -1,9 +1,5 @@
 import { createWebHistory, createRouter } from "vue-router";
-import AllPages from "./components/pages/AllPages.vue"
-import CreatePage from "./components/pages/CreatePage.vue"
-import EditPage from "./components/pages/Edit.vue"
-import NestedView from "./components/pages/NestedView.vue"
-
+import { AllPages, CreatePage, EditPage, NestedView } from "./components/pages";
 
 const nestedRoute = (name, path, component) => {
     return { name, path, component }
@@ -33,7 +29,7 @@ const routes = [
                                         ...nestedRoute('page8', ":page8/", NestedView),
                                         children: [{
                                             ...nestedRoute('page9', ":page9/", NestedView),
-                                            children: [{ 
+                                            children: [{
                                                 ...nestedRoute('page10', ":page10/", NestedView),
                                             }]
                                         }]

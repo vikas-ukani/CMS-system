@@ -9,14 +9,16 @@ use App\Models\Page;
 
 class PageController extends Controller
 {
+
+    /**
+     * Getting All Pages with parent and childs relationship.
+     *
+     * @return void
+     */
     public function index()
     {
         $pages = Page::with(['children', 'parent'])->get();
-        return response()->json([
-            'data' => $pages,
-            "success" => true,
-            "message" => "Pages retrived."
-        ], 200);
+        return response()->json(['data' => $pages, "success" => true, "message" => "Pages retrived."], 200);
     }
 
     /**
@@ -27,20 +29,18 @@ class PageController extends Controller
     public function store(CreatePageRequest $request)
     {
         $page = Page::create($request->validated());
-        return response()->json([
-            'data' =>  $page,
-            'success' => true,
-            "message" => "Page has been successfully created."
-        ], 201);
-        // return view('admin.pages.index')
+        return response()->json(['data' => $page, 'success' => true, "message" => "Page has been successfully created."], 201);
     }
 
+    /**
+     * Showing Current page details by slug
+     *
+     * @param Page $page
+     * @return void
+     */
     public function show(Page $page)
     {
-        return response()->json([
-            'data' => $page,
-            'success' => true
-        ], 200);
+        return response()->json(['data' => $page, 'success' => true], 200);
     }
 
     /**
@@ -52,20 +52,11 @@ class PageController extends Controller
      */
     public function update(Page $page, UpdatePageRequest $request)
     {
-        // $page = Page::where('id', $page->id);
         if (!isset($page)) {
-            return response()->json([
-                'data' => null,
-                'success' => false,
-                'message' => "Page not found."
-            ], 200);
+            return response()->json(['data' => null, 'success' => false, 'message' => "Page not found."], 200);
         } else {
             $page->update($request->validated());
-            return response()->json([
-                'data' => $page,
-                'success' => true,
-                'message' => "Page details has been updated."
-            ], 200);
+            return response()->json(['data' => $page, 'success' => true, 'message' => "Page details has been updated."], 200);
         }
     }
 
@@ -84,12 +75,7 @@ class PageController extends Controller
         $childPage = Page::where('parent_id', $page->id)->get();
         $ids = array_values(collect($childPage)->pluck('id')->all());
         \DB::table('pages')->whereIn('id', $ids)->update(['parent_id' => null]);
-
         $page->delete();
-        return response()->json([
-            'data' => null,
-            'success' => true,
-            'message' => "Page details has been deleted."
-        ]);
+        return response()->json(['data' => null, 'success' => true, 'message' => "Page details has been deleted."]);
     }
 }

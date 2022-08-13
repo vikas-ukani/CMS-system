@@ -20,7 +20,6 @@
         <label for="title" class="form-label">Page title *</label>
         <input class="form-control" placeholder="Enter page title" type="text" v-model="v$.page.title.$model"
           @input="setTitle">
-        <!-- error message -->
         <div class="input-errors" v-for="error of v$.page.title.$errors" :key="error.$uid">
           <div class="error-msg text-danger">{{ error.$message }}</div>
         </div>
@@ -43,7 +42,6 @@
         <ckeditor tag-name="textarea" ref="cktext" :editor="editor" v-model="v$.page.content.$model"
           :config="editorConfig">
         </ckeditor>
-        <!-- error message -->
         <div class="input-errors" v-for="error of v$.page.content.$errors" :key="error.$uid">
           <div class="error-msg text-danger">{{ error.$message }}</div>
         </div>
@@ -104,7 +102,6 @@ export default {
     return {
       page: {
         title: {
-          // required
           required: helpers.withMessage('Page title field is required', required)
         },
         content: {
@@ -137,11 +134,12 @@ export default {
           }
         })
     },
+    /**
+     * Convert title to slug field
+     */
     setTitle($event) {
-      // Convert title to slug field
       this.page.slug = $event.target.value.trim().toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
     }
-
   },
 } 
 </script>
