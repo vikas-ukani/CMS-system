@@ -31,6 +31,17 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 git clone https://github.com/vikas-ukani/CMS-system.git
 ```
 
+### Create .env file
+```
+cp .env.example .env
+```
+
+- Configure local database connection.
+###  Generate key if it's required, Run the command 
+```
+php artisan generate:key
+```
+
 ### install pacakges.
 - Install php laravel pacakges
 ```
@@ -42,5 +53,26 @@ npm install
 ```
 
 ### Database setup
-- Find the exported database backup on database directory.
+- Find the exported database backup on database directory and import on local system.
 - Path `database/cms-system.sql`
+
+- OR run the migrations, for fresh database setup.
+`php artisan migrate`
+
+### Run the PHP server
+```
+php artisan serve
+```
+
+### Run Vue server
+```
+npm run dev
+```
+
+
+### Visit the site.
+```
+http://localhost:8000/
+```
+
+
