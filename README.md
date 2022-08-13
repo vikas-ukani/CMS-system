@@ -26,9 +26,10 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 ## Installation process
 
-### clone the repo.
+### Clone the repo.
 ```
 git clone https://github.com/vikas-ukani/CMS-system.git
+cd CMS-system/
 ```
 
 ### Create .env file
