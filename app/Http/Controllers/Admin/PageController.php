@@ -16,14 +16,7 @@ class PageController extends Controller
             'data' => $pages,
             "success" => true,
             "message" => "Pages retrived."
-        ]);
-    }
-
-    public function getPageBySearch()
-    {
-        $pages = Page::where('name', 'LIKE', '%{$search}%');
-
-        return response()->json(['data' => $pages]);
+        ], 200);
     }
 
     /**
@@ -38,7 +31,7 @@ class PageController extends Controller
             'data' =>  $page,
             'success' => true,
             "message" => "Page has been successfully created."
-        ]);
+        ], 201);
         // return view('admin.pages.index')
     }
 
@@ -47,7 +40,7 @@ class PageController extends Controller
         return response()->json([
             'data' => $page,
             'success' => true
-        ]);
+        ], 200);
     }
 
     /**
@@ -65,14 +58,14 @@ class PageController extends Controller
                 'data' => null,
                 'success' => false,
                 'message' => "Page not found."
-            ]);
+            ], 200);
         } else {
             $page->update($request->validated());
             return response()->json([
                 'data' => $page,
                 'success' => true,
                 'message' => "Page details has been updated."
-            ]);
+            ], 200);
         }
     }
 
@@ -86,11 +79,10 @@ class PageController extends Controller
     public function destroy(Page $page)
     {
         /**
-         * Update child pages parent id to null
+         * Update child pages as well and update it's parent id to null.
          */
         $childPage = Page::where('parent_id', $page->id)->get();
         $ids = array_values(collect($childPage)->pluck('id')->all());
-        // Page::whereIn('id', $ids)->update('parent_id', null);
         \DB::table('pages')->whereIn('id', $ids)->update(['parent_id' => null]);
 
         $page->delete();
