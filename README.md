@@ -77,6 +77,10 @@ php artisan serve
 npm run dev
 ```
 
+### Run the test for routes.
+```
+php artisan test
+```
 
 ### Visit the site.
 ```

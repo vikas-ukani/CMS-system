@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use Illuminate\Support\Str;
 
 class PageTest extends TestCase
 {
@@ -49,10 +50,15 @@ class PageTest extends TestCase
     public function testCreateTestPageApi()
     {
         $response = $this->json('POST', '/api/pages', [
-            'title' => 'Test Title',
-            'slug' => 'test-title',
+            'title' => Str::random(20),
+            'slug' => Str::random(20),
             'parent_id' => null,
-            'content' => "<p>Test Page Contents.</p>"
+            'content' => "<p>". Str::random(20) ."</p>"
+
+            // 'title' => 'Test Title',
+            // 'slug' => 'test-title',
+            // 'parent_id' => null,
+            // 'content' => "<p>Test Page Contents.</p>"
         ]);
         return $response->assertStatus(201);
     }
